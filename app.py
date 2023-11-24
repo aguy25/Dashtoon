@@ -16,30 +16,6 @@ HEADERS = {
 UNABRIDGED_DIR = 'static/unabridged/'
 ABRIDGED_DIR = 'static/'
 logging.basicConfig(filename='app.log', level=logging.INFO)
-def addLoggingLevel(levelName, levelNum, methodName=None):
-    if not methodName:
-        methodName = levelName.lower()
-
-    if hasattr(logging, levelName):
-       raise AttributeError('{} already defined in logging module'.format(levelName))
-    if hasattr(logging, methodName):
-       raise AttributeError('{} already defined in logging module'.format(methodName))
-    if hasattr(logging.getLoggerClass(), methodName):
-       raise AttributeError('{} already defined in logger class'.format(methodName))
-
-    # This method was inspired by the answers to Stack Overflow post
-    # http://stackoverflow.com/q/2183233/2988730, especially
-    # http://stackoverflow.com/a/13638084/2988730
-    def logForLevel(self, message, *args, **kwargs):
-        if self.isEnabledFor(levelNum):
-            self._log(levelNum, message, args, **kwargs)
-    def logToRoot(message, *args, **kwargs):
-        logging.log(levelNum, message, *args, **kwargs)
-
-    logging.addLevelName(levelNum, levelName)
-    setattr(logging, levelName, levelNum)
-    setattr(logging.getLoggerClass(), methodName, logForLevel)
-    setattr(logging, methodName, logToRoot)
 
 def query_api(text):
     payload = {"inputs": text}
@@ -79,12 +55,12 @@ def generate_single_input_comic():
     
     # Divide the input into 10 sentences
     panel_texts = divide_input(input_text, num_lines=10)
-    #print(panel_texts)
+    
     #Generate images for each panel and save the unabridged versions
     for i, text in enumerate(panel_texts):
-        print(i)
+        
         image_bytes = query_api(text)
-        print("h")
+        
         if image_bytes is not None:
             image = Image.open(io.BytesIO(image_bytes))
         
@@ -127,8 +103,8 @@ def download_combined_comic():
 
 def add_text_to_image(image, text):
     draw = ImageDraw.Draw(image)
-    font = ImageFont.load_default()  # You can customize the font if needed
-    draw.text((10, 10), text, (255, 255, 255), font=font)  # Adjust the position as needed
+    font = ImageFont.load_default()  
+    draw.text((10, 10), text, (255, 255, 255), font=font)  
 
 def add_text_to_unabridged_image(panel_number, text):
     unabridged_path = os.path.join(UNABRIDGED_DIR, 'panel{}.png'.format(panel_number))
@@ -147,8 +123,8 @@ def add_text_to_unabridged_image(panel_number, text):
 
     # Add text to the whitespace
     draw = ImageDraw.Draw(new_image)
-    font = ImageFont.load_default()  # You can customize the font if needed
-    text_position = (10, new_height + 10)  # Adjust the position to control the amount of whitespace
+    font = ImageFont.load_default()  
+    text_position = (10, new_height + 10)  
     draw.text(text_position, text, (0, 0, 0), font=font)
 
     # Save the modified image
@@ -175,12 +151,8 @@ def feedback_form():
 def submit_feedback():
     feedback_text = request.form['feedback']
     
-    # Here, you can save the feedback to a database or perform any other necessary action.
-    # For simplicity, we'll just print the feedback to the console.
-    logging.feedback(f"Feedback received: {feedback_text}")
-    return  render_template('feedback_message.html') # Redirect to the home page after submitting feedback
+    logging.info(f"Feedback received: {feedback_text}")
+    return  render_template('feedback_message.html') 
 
 if __name__ == '__main__':
-    addLoggingLevel('FEEDBACK',logging.INFO+5)
-    #logging.feedback("hoho")
     app.run(debug=True)
