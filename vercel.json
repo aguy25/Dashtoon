@@ -12,4 +12,8 @@
           "dest": "app.py"
       }
   ]
+  "functions": {
+    "app/api/**/*": {
+      "maxDuration": 500 // All functions can run for a maximum of 5 seconds
+    }
 }
