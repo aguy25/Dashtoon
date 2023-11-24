@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Comic</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="head">
+        <h1>Generated Comic</h1>
+        </div>
+        <div class="comic-line">
+            {% for i in range(10) %}
+                    <img src="{{ image_paths[i] }}" alt="Panel"><br>
+            {% endfor %}
+        </div>
+        <br>
+        <div class="form">
+        <form action="/add_text_to_comic" method="post">
+            <input type="hidden" name="image_paths" value="{{ image_paths|join(',') }}">
+            <label for="panel_number">Enter panel number:</label>
+            <input type="number" id="panel_number" name="panel_number" placeholder="Enter panel number" required>
+            <br>
+            <label for="comic_text">Enter text for the comic panel:</label>
+            <input type="text" id="comic_text" name="comic_text" placeholder="Enter text for panel..." >
+            <br><br>
+            <button type="submit">Add Text to Comic</button>
+        </form>
+        </div>
+        <div class="downloand">
+            <br>
+        <form action="/download_combined_comic" method="post">
+            <input type="hidden" name="image_paths" value="{{ image_paths|join(',') }}">
+            <button type="submit">Download Comic</button>
+        </form>
+    </div>
+    <div class="links">
+        <a href="{{ url_for('feedback_form') }}" class="feedback-link">Provide Feedback</a><br>
+        <a href="/">Back to Home</a>
+    </div>
+    </div>
+</body>
+</html>

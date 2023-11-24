@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Panel Comic Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>10 Panel Comic Generator</h1>
+        <form action="/generate_single_input_comic" method="post">
+            <label for="text">Enter your story:</label>
+            <textarea id="text" name="text" rows="8" required placeholder="Once upon a time..."></textarea>
+            <br>
+            <button type="submit">Generate Comic</button>
+        </form>
+        <a href="{{ url_for('feedback_form') }}" class="feedback-link">Provide Feedback</a>
+    </div>
+</body>
+</html>
